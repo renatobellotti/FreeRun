@@ -8,30 +8,20 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
+
+import java.io.IOException;
 
 
 public class TrackingActivity extends Activity {
 
-    private static final int BUFFER_SIZE = 20;
-    private Location[]  buffer = new Location[BUFFER_SIZE];
-    private int currentIndex = 0;
-
     private LocationManager manager;
+    private GPXGenerator gpx;
 
     private LocationListener listener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
-            // TODO
-            if(currentIndex != BUFFER_SIZE){
-                buffer[currentIndex] = location;
-                ++currentIndex;
-            }else{
-                // buffer is full
-                // TODO
-                // write all buffered data to a file
-                currentIndex = 0;
-            }
-
+            gpx.appendData(location);
         }
 
         @Override
@@ -56,6 +46,20 @@ public class TrackingActivity extends Activity {
         setContentView(R.layout.display_current_run_data);
 
         manager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
+        Log.v("MyTAG", "test");
+        String s = getString(R.string.gpx_header);
+
+        // Use the UNIX time stamp of the current time as the file name:
+        // This is independent of the user's locale settings and can easily be converted to be
+        // displayed in the user's current locale even when he/she changes it.
+        long timeStamp = System.currentTimeMillis() / 1000L;
+        String filename = timeStamp + ".gpx";
+        try {
+            gpx = new GPXGenerator(this, filename);
+        }catch(IOException e){
+            // TODO
+            e.printStackTrace();
+        }
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -73,5 +77,11 @@ public class TrackingActivity extends Activity {
     protected void onDestroy() {
         super.onDestroy();
         manager.removeUpdates(listener);
+        try {
+            gpx.close();
+        } catch (IOException e) {
+            // TODO
+            e.printStackTrace();
+        }
     }
 }
