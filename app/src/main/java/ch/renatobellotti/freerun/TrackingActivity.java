@@ -46,8 +46,6 @@ public class TrackingActivity extends Activity {
         setContentView(R.layout.display_current_run_data);
 
         manager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
-        Log.v("MyTAG", "test");
-        String s = getString(R.string.gpx_header);
 
         // Use the UNIX time stamp of the current time as the file name:
         // This is independent of the user's locale settings and can easily be converted to be
