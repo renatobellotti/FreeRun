@@ -8,7 +8,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
-import java.util.TimeZone;
 
 
 /** Generate a GPX file out of Location objects.
@@ -50,7 +49,7 @@ class GPXGenerator {
         // attributes
         final String ALTITUDE_FORMAT = "\t\t\t<ele>%1$s</ele>\n";
         final String TIME_FORMAT = "\t\t\t<time>%1$s</time>\n";
-        final String SPEED_FORMAT = "\t\t\t<speed>%1$s</speed>\n";
+        //final String SPEED_FORMAT = "\t\t\t<speed>%1$s</speed>\n";
         final String NUMBER_OF_SAT_FORMAT = "\t\t\t<sat>%1$s</sat>\n";
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
@@ -74,7 +73,7 @@ class GPXGenerator {
         file.write(trackpoint);
     }
 
-    public void close() throws IOException {
+    void close() throws IOException {
         file.write("\t\t</trkseg>\n");
         file.write("\t</trk>\n");
         file.write("</gpx>");
