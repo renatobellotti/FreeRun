@@ -1,6 +1,5 @@
 package ch.renatobellotti.freerun;
 
-
 import android.content.Context;
 import android.location.Location;
 
@@ -9,20 +8,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.xml.sax.SAXException;
 
-import java.io.File;
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-
-import javax.xml.XMLConstants;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Validator;
+import java.io.InputStreamReader;
 
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.fail;
@@ -58,15 +49,18 @@ public class GPXGeneratorTest{
         when(loc.getLongitude()).thenReturn(8.546048);
         when(loc.getAltitude()).thenReturn((double) 0);
         when(loc.getTime()).thenReturn((long) 0);
-        when(loc.getSpeed()).thenReturn((float) 0);
+        //when(loc.getSpeed()).thenReturn((float) 0);
         when(loc.getExtras()).thenReturn(null);
     }
 
+    // the current minimum API level does not support System.lineSeparator()!
+    // all the "\n" characters should be replaced by the API method if the minimum API level is
+    // increased one day
     private GPXGenerator getGenerator(final String filename){
         try{
             return new GPXGenerator(context, filename);
         } catch (FileNotFoundException e) {
-            fail("FileNotFoundException when constructing a GPXGenerator");
+            fail("FileNotFoundException when constructing a GPXGenerator:\n" + e.getMessage());
         }
 
         // should never happen
@@ -80,7 +74,7 @@ public class GPXGeneratorTest{
         try {
             generator.close();
         } catch (IOException e) {
-            fail("IOException when closing the GPXGenerator");
+            fail("IOException when closing the GPXGenerator:\n" + e.getMessage());
         }
 
         // validate the XML
@@ -95,33 +89,48 @@ public class GPXGeneratorTest{
         try {
             generator.close();
         } catch (IOException e) {
-            fail("IOException when closing the GPXGenerator");
+            fail("IOException when closing the GPXGenerator:\n" + e.getMessage());
         }
 
         // validate the XML
-        validateGPX(HEADER_ONLY_PATH);
+        validateGPX(FULL_CONTENT_PATH);
     }
 
-    // An easier solution would be to call xmllint:
-    // xmllint --noout --schema http://www.topografix.com/GPX/1/1/gpx.xsd /tmp/full_content.gpx
-    // Interestingly, the following command does not validate (because a DTD file is missing...)
-    // xmllint --noout --postvalid --schema http://www.topografix.com/GPX/1/1/gpx.xsd /tmp/full_content.gpx
+    /**
+     * Validates the GPX file at pathToGPX.
+     *
+     * Note that the command line program xmllint has to be installed and in the path
+     * in order for this method to work.
+     * @param pathToGPX Path to the GPX file to validate
+     */
     private void validateGPX(String pathToGPX){
-        // The following code has been adapted from:
-        // http://www.journaldev.com/895/how-to-validate-xml-against-xsd-in-java
+        final String CMD_MASK = "xmllint --noout --schema http://www.topografix.com/GPX/1/1/gpx.xsd %1$s";
+        // Interestingly, the following command does not validate (because a DTD file is missing...)
+        // xmllint --noout --postvalid --schema http://www.topografix.com/GPX/1/1/gpx.xsd /tmp/full_content.gpx
+        final String CMD = String.format(CMD_MASK, pathToGPX);
         try {
-            InputStream onlineSchema = new URL("http://www.topografix.com/gpx/1/1/gpx.xsd").openStream();
+            Process process = Runtime.getRuntime().exec(CMD);
+            process.waitFor();
+            if(process.exitValue() != 0){
+                // some error while validating the GPX file
+                // get the error output of xmllint
+                String xmllintOutput = "";
+                BufferedReader outputStream = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+                String line;
+                while((line = outputStream.readLine()) != null){
+                    xmllintOutput += line + "\n";
+                }
 
-            SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            Schema schema = factory.newSchema(new StreamSource(onlineSchema));
-            Validator validator = schema.newValidator();
-            validator.validate(new StreamSource(new File(pathToGPX)));
-        } catch(IOException e){
-            fail("IOException while validating the GPX file");
-        } catch (SAXException e) {
-            System.out.println(e.getMessage());
-            System.out.println(e.toString());
-            fail("SAXException while validating the GPX file");
+                // print error message
+                String errorMessage = "The GPX file %1$s was not successfully validated.\n";
+                errorMessage += "Output of xmllint:\n";
+                errorMessage += xmllintOutput;
+                fail(String.format(errorMessage, pathToGPX));
+            }
+        } catch (IOException e) {
+            fail("IOException while trying to run xmllint:\n" + e.getMessage());
+        } catch (InterruptedException e) {
+            fail("InterruptedException while waiting for xmllint to finish:\n" + e.getMessage());
         }
     }
 }

@@ -62,8 +62,9 @@ class GPXGenerator {
         //attributes.append(String.format(SPEED_FORMAT, location.getSpeed()));
 
         Bundle extras = location.getExtras();
-        if(extras != null){
-            attributes.append(String.format(NUMBER_OF_SAT_FORMAT, extras.getCharArray("satellites")));
+        if((extras != null) && (extras.getString("satellites") != null)){
+            String numberOfSatellites = extras.getString("satellites");
+            attributes.append(String.format(NUMBER_OF_SAT_FORMAT, numberOfSatellites));
         }
 
         // TODO: include "horizontal dilution of precision" as an attribute
