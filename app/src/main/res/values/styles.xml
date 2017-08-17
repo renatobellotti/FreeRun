@@ -8,4 +8,20 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="title">
+        <item name="android:textSize">22pt</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+
+    <style name="dataLabel">
+        <item name="font">@string/fontFile</item>
+        <item name="android:textSize">15pt</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="data" parent="dataLabel">
+        <item name="android:textStyle">normal</item>
+    </style>
+
 </resources>

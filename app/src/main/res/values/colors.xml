@@ -7,4 +7,5 @@
     <!-- <color name="data_background">#527a7a</color> -->
     <color name="data_background">#e6f3ff</color>
     <color name="collectingText">#FFFFFF</color>
+    <color name="group_box">#0088cc</color>
 </resources>

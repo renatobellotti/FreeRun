@@ -6,4 +6,9 @@
     <string name="currentSpeed">Current Speed:</string>
     <string name="time_default">0:00 s</string>
     <string name="fontFile">SourceSansPro-Bold.ttf</string>
+    <string name="speedDefault">0 m/s</string>
+    <string name="startButton">Start tracking</string>
+    <string name="averageSpeed">Avg. Speed:</string>
+    <string name="distanceDefault">0 m</string>
+    <string name="distance">Distance:</string>
 </resources>
