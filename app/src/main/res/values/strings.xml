@@ -14,4 +14,6 @@
     <string name="stopButton">Stop tracking</string>
     <string name="continueTracking">Continue tracking</string>
     <string name="stopTracking">Stop tracking</string>
+    <string name="share">Share</string>
+    <string name="select_send_option">Send using:</string>
 </resources>
