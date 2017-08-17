@@ -4,4 +4,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="background">#6699ff</color>
+    <!-- <color name="data_background">#527a7a</color> -->
+    <color name="data_background">#e6f3ff</color>
+    <color name="collectingText">#FFFFFF</color>
 </resources>

@@ -42,7 +42,7 @@ public class TrackingActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.display_current_run_data);
+        setContentView(R.layout.while_running);
 
         manager = (LocationManager) this.getSystemService(LOCATION_SERVICE);
 

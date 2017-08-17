@@ -18,6 +18,9 @@ class GPXGenerator {
 
     private PrintWriter file;
 
+    // TODO: change this so not a filename but an OutputStream is passed
+    // this would allow to use the code completely independently from the Android platform
+    // and as a stand alone library if not a Location object is passed but the individual values
     GPXGenerator(Context context, String fileName) throws FileNotFoundException {
         file = new PrintWriter(context.openFileOutput(fileName, Context.MODE_PRIVATE));
         writeHeader();

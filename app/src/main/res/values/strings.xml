@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">FreeRun</string>
     <string name="run">Run!</string>
+    <string name="collectingTitle">Freerun - Run!</string>
+    <string name="time">Time:</string>
+    <string name="currentSpeed">Current Speed:</string>
+    <string name="time_default">0:00 s</string>
+    <string name="fontFile">SourceSansPro-Bold.ttf</string>
 </resources>
