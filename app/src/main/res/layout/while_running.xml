@@ -131,7 +131,8 @@
 
         </LinearLayout>
 
-        <com.gc.materialdesign.views.ButtonRectangle
+        <Button
+            android:id="@+id/toggleTracking"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_gravity="bottom"
