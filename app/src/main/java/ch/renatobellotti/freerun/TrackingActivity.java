@@ -157,12 +157,26 @@ public class TrackingActivity extends Activity implements View.OnClickListener{
         // displayed in the user's current locale even when he/she changes it.
         long timeStamp = System.currentTimeMillis() / 1000L;
         String filename = timeStamp + ".gpx";
-        try {
-            FileOutputStream file = new FileOutputStream(getStorageDirectory() + filename);
-            gpx = new GPXGenerator(file);
-        }catch(IOException e){
-            // TODO
-            e.printStackTrace();
+        FileOutputStream file = null;
+        File directory = getStorageDirectory();
+        if(directory == null){
+            // no storage available
+            // TODO: handle this in a clean way
+            finish();
+        }else {
+            try {
+                file = new FileOutputStream(new File(directory, filename));
+            } catch (IOException e) {
+                // TODO
+                e.printStackTrace();
+                Log.e(TAG, "IOException!");
+                assert (false);
+            }
+            if (file == null) {
+                gpx = new GPXGenerator(file);
+            } else {
+                // TODO
+            }
         }
     }
 
@@ -171,11 +185,13 @@ public class TrackingActivity extends Activity implements View.OnClickListener{
         super.onDestroy();
         deactivateTracking();
         updateInterfaceTask.cancel();
-        try {
-            gpx.close();
-        } catch (IOException e) {
-            // TODO
-            e.printStackTrace();
+        if(gpx != null) {
+            try {
+                gpx.close();
+            } catch (IOException e) {
+                // TODO
+                e.printStackTrace();
+            }
         }
     }
 
@@ -229,9 +245,12 @@ public class TrackingActivity extends Activity implements View.OnClickListener{
      * Returns the path to the directory where all GPX files are stored.
      *
      * This method tries to make the directory, the path should be existing.
-     * @return the path to the directory where the GPX files are stored
+     * @return the path to the directory where the GPX files are stored or null if the directory is not available (e. g. currently connected to computer)
      */
     public static File getStorageDirectory(){
+        if(!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
+            return null;
+        }
         File path = Environment.getExternalStorageDirectory();
         path = new File(path, "Freerun/");
         path.mkdir();
