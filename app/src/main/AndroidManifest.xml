@@ -20,7 +20,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".TrackingActivity" />
-        <activity android:name=".GPXSelectorActivity" />
     </application>
 
 </manifest>

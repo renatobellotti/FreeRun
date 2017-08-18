@@ -17,4 +17,7 @@
     <string name="share">Share</string>
     <string name="select_send_option">Send using:</string>
     <string name="shareMessage">Select the file(s) to share:</string>
+    <string name="err_writing_not_possible_title">Writing data not possible</string>
+    <string name="err_writing_not_possible_msg">It is not possible to write the collected data. Oh no!</string>
+    <string name="ok">Ok</string>
 </resources>

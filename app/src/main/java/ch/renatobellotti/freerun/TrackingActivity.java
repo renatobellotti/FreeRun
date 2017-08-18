@@ -2,6 +2,7 @@ package ch.renatobellotti.freerun;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -19,6 +20,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -66,19 +68,20 @@ public class TrackingActivity extends Activity implements View.OnClickListener{
         public void handleMessage(Message msg){
             // TODO: update the interface
             TrackingActivity activity = weakReference.get();
+            Locale locale = Locale.getDefault();
             // update time
             PlusTextView timeData = activity.findViewById(R.id.timeData);
-            timeData.setText(String.format("%1$02d:%2$02d", activity.time/60, activity.time%60));
+            timeData.setText(String.format(locale, "%1$02d:%2$02d", activity.time/60, activity.time%60));
             ++activity.time;
             //update current speed
             PlusTextView currentSpeedData = activity.findViewById(R.id.currentSpeedData);
-            currentSpeedData.setText(String.format("%1$1.2f m/s", activity.lastLoc.getSpeed()));
+            currentSpeedData.setText(String.format(locale, "%1$1.2f m/s", activity.lastLoc.getSpeed()));
             //update average speed
             PlusTextView averageSpeedData = activity.findViewById(R.id.averageSpeedData);
-            averageSpeedData.setText(String.format("%1$1.2f m/s", activity.speedSum/activity.numberOfPoints));
+            averageSpeedData.setText(String.format(locale, "%1$1.2f m/s", activity.speedSum/activity.numberOfPoints));
             // update distance
             PlusTextView distanceData = activity.findViewById(R.id.distanceData);
-            distanceData.setText(String.format("%1$1.2f km", activity.distance/1000));
+            distanceData.setText(String.format(locale, "%1$1.2f km", activity.distance/1000));
         }
     }
 
@@ -157,25 +160,26 @@ public class TrackingActivity extends Activity implements View.OnClickListener{
         // displayed in the user's current locale even when he/she changes it.
         long timeStamp = System.currentTimeMillis() / 1000L;
         String filename = timeStamp + ".gpx";
-        FileOutputStream file = null;
+        FileOutputStream file;
         File directory = getStorageDirectory();
         if(directory == null){
             // no storage available
-            // TODO: handle this in a clean way
+            // TODO: handle this in a clean way and display an error message
             finish();
         }else {
             try {
                 file = new FileOutputStream(new File(directory, filename));
+                gpx = new GPXGenerator(file);
             } catch (IOException e) {
                 // TODO
                 e.printStackTrace();
                 Log.e(TAG, "IOException!");
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle(getString(R.string.err_writing_not_possible_title));
+                builder.setMessage(getString(R.string.err_writing_not_possible_msg));
+                AlertDialog dialog = builder.create();
+                dialog.show();
                 assert (false);
-            }
-            if (file == null) {
-                gpx = new GPXGenerator(file);
-            } else {
-                // TODO
             }
         }
     }
@@ -206,6 +210,7 @@ public class TrackingActivity extends Activity implements View.OnClickListener{
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
             Log.e(TAG, "No permissions to access the GPS location!");
+
             assert(false);
             return;
         }
@@ -253,7 +258,10 @@ public class TrackingActivity extends Activity implements View.OnClickListener{
         }
         File path = Environment.getExternalStorageDirectory();
         path = new File(path, "Freerun/");
-        path.mkdir();
+        boolean createdDir = path.mkdir();
+        if(createdDir){
+            Log.v(TAG, "created directory " + path.getAbsolutePath());
+        }
         Log.d(TAG, path.getAbsolutePath());
         return path;
     }
