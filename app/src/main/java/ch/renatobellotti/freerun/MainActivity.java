@@ -4,14 +4,15 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 
 import java.io.File;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static int SELECT_GPX = 0;
+    private static final String TAG = "MainActivity";
+    private static final int SHARE_REQUEST_CODE = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,34 +27,41 @@ public class MainActivity extends AppCompatActivity {
 
     public void share(View v){
         // let the user select a file
-        Intent pickActivityIntent = new Intent(this, GPXSelectorActivity.class);
-        startActivityForResult(pickActivityIntent, SELECT_GPX);
+        /*DialogProperties properties = new DialogProperties();
+        properties.selection_type = DialogConfigs.FILE_SELECT;
+        properties.selection_mode = DialogConfigs.MULTI_MODE;
+        //properties.root = new File(getStorageDirectory());
+        File file = Environment.getExternalStorageDirectory();
+        file = new File(file, "Freerun/");
+        file.mkdirs();
+        Log.w(TAG, file.getAbsolutePath());
+        properties.root = file;
+        //properties.extensions = new String[]{"gpx"};
+        FilePickerDialog dialog = new FilePickerDialog(this, properties);
+        dialog.setTitle(getString(R.string.shareMessage));
+        dialog.show();*/
+        Intent selectFileIntent = new Intent(this, GPXSelectorActivity.class);
+        startActivityForResult(selectFileIntent, SHARE_REQUEST_CODE);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        if(requestCode == SELECT_GPX){
+        if(requestCode == SHARE_REQUEST_CODE){
             if(resultCode == RESULT_OK){
-                String path = data.getStringExtra(GPXSelectorActivity.SELECTED_PATH_FIELD);
+                // actually share the files
+                String path = data.getExtras().getString(GPXSelectorActivity.SELECTED_PATH_FIELD);
                 File file = new File(path);
                 Uri uri = Uri.fromFile(file);
-                //System.out.println(path);
-                Log.d("TAG", "Sharing file: " + path);
-                Intent shareIntent = new Intent();
-                shareIntent.setAction(Intent.ACTION_SEND);
-                shareIntent.setData(uri);
-                shareIntent.setType("text/xml");
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
                 shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
-
-
-                // WARNING: this won't work because the app's internal directory is not publicly available!
-                startActivity(Intent.createChooser(shareIntent, getString(R.string.select_send_option)));
+                //shareIntent.setType("text/plain");
+                startActivity(Intent.createChooser(shareIntent, getString(R.string.shareMessage)));
             }else{
-                // TODO: handle error; for now just ignore the error and act as if nothing had happened
-                // *whistling*
+                // TODO: handle errors; for now, just ignore the errors
             }
         }else{
-            // TODO: handle error (because no other request could have been made)
+            // undefined behaviour: how should this have happened?
+            // TODO
         }
     }
 }

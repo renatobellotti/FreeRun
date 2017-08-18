@@ -1,11 +1,10 @@
 package ch.renatobellotti.freerun;
 
-import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 
@@ -18,11 +17,8 @@ class GPXGenerator {
 
     private PrintWriter file;
 
-    // TODO: change this so not a filename but an OutputStream is passed
-    // this would allow to use the code completely independently from the Android platform
-    // and as a stand alone library if not a Location object is passed but the individual values
-    GPXGenerator(Context context, String fileName) throws FileNotFoundException {
-        file = new PrintWriter(context.openFileOutput(fileName, Context.MODE_PRIVATE));
+    GPXGenerator(OutputStream fileOutput) {
+        file = new PrintWriter(fileOutput);
         writeHeader();
     }
 
@@ -39,6 +35,8 @@ class GPXGenerator {
         file.write("\t\t<trkseg>\n");
     }
 
+    // TODO: change this so that the indvidual values are passed instead on a Location object
+    // that way this class could also be used without the Android platform
     /** Add another track point to the GPX file.
      *
      * For more information and examples about the GPX format, see https://de.wikipedia.org/wiki/GPS_Exchange_Format.

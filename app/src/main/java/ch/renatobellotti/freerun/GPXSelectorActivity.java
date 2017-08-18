@@ -28,8 +28,12 @@ public class GPXSelectorActivity extends AppCompatActivity implements AdapterVie
         setContentView(R.layout.select_gpx);
 
         // get an array of all filenames formatted in a human readable way
-        File directory = getFilesDir();
+        File directory = TrackingActivity.getStorageDirectory();
         String[] filenames = directory.list();
+        String[] absolutePaths = new String[filenames.length];
+        for(int i=0; i<filenames.length; ++i){
+            absolutePaths[i] = new File(directory, filenames[i]).getAbsolutePath();
+        }
         // TODO: overwrite toString() method so the stamp can be kept but the display is still human readable
         /*for(int i=0; i<filenames.length; ++i){
             // cut off trailing ".gpx" to get the UNIX time stamp
@@ -40,7 +44,7 @@ public class GPXSelectorActivity extends AppCompatActivity implements AdapterVie
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd.mm.yyyy HH:mm:ss");
             filenames[i] = dateFormat.format(date);
         }*/
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.list_item_view, filenames);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.list_item_view, absolutePaths);
         ListView listView = (ListView) findViewById(R.id.fileListView);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);

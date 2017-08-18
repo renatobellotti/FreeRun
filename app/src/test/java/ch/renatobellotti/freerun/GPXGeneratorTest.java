@@ -39,12 +39,6 @@ public class GPXGeneratorTest{
 
     @Before
     public void setup(){
-        try {
-            when(context.openFileOutput(HEADER_ONLY_FILENAME, Context.MODE_PRIVATE)).thenReturn(new FileOutputStream(HEADER_ONLY_PATH));
-            when(context.openFileOutput(FULL_CONTENT_FILENAME, Context.MODE_PRIVATE)).thenReturn(new FileOutputStream(FULL_CONTENT_PATH));
-        } catch (FileNotFoundException e) {
-            fail("FileNotFoundException when opening the output stream:\n" + e.getMessage());
-        }
         when(loc.getLatitude()).thenReturn(47.365748);
         when(loc.getLongitude()).thenReturn(8.546048);
         when(loc.getAltitude()).thenReturn((double) 0);
@@ -56,7 +50,7 @@ public class GPXGeneratorTest{
     // the current minimum API level does not support System.lineSeparator()!
     // all the "\n" characters should be replaced by the API method if the minimum API level is
     // increased one day
-    private GPXGenerator getGenerator(final String filename){
+    /*private GPXGenerator getGenerator(final String filename){
         try{
             return new GPXGenerator(context, filename);
         } catch (FileNotFoundException e) {
@@ -65,11 +59,17 @@ public class GPXGeneratorTest{
 
         // should never happen
         return null;
-    }
+    }*/
 
     @Test
     public void testHeader(){
-        GPXGenerator generator = getGenerator(HEADER_ONLY_FILENAME);
+        FileOutputStream file = null;
+        try {
+            file = new FileOutputStream(HEADER_ONLY_PATH);
+        } catch (FileNotFoundException e) {
+            fail("FileNotFoundException when opening the FileOutputStream for header only test case:\n" + e.getMessage());
+        }
+        GPXGenerator generator = new GPXGenerator(file);
         assertNotNull(generator);
         try {
             generator.close();
@@ -83,7 +83,13 @@ public class GPXGeneratorTest{
 
     @Test
     public void testFullContent(){
-        GPXGenerator generator = getGenerator(FULL_CONTENT_FILENAME);
+        FileOutputStream file = null;
+        try {
+            file = new FileOutputStream(FULL_CONTENT_PATH);
+        } catch (FileNotFoundException e) {
+            fail("FileNotFoundException when opening the FileOutputStream for header only test case:\n" + e.getMessage());
+        }
+        GPXGenerator generator = new GPXGenerator(file);
         assertNotNull(generator);
         generator.appendData(loc);
         try {

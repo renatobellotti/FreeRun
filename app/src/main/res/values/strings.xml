@@ -16,4 +16,5 @@
     <string name="stopTracking">Stop tracking</string>
     <string name="share">Share</string>
     <string name="select_send_option">Send using:</string>
+    <string name="shareMessage">Select the file(s) to share:</string>
 </resources>

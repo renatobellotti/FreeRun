@@ -7,6 +7,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.ActivityCompat;
@@ -14,6 +15,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.Timer;
@@ -155,7 +158,8 @@ public class TrackingActivity extends Activity implements View.OnClickListener{
         long timeStamp = System.currentTimeMillis() / 1000L;
         String filename = timeStamp + ".gpx";
         try {
-            gpx = new GPXGenerator(this, filename);
+            FileOutputStream file = new FileOutputStream(getStorageDirectory() + filename);
+            gpx = new GPXGenerator(file);
         }catch(IOException e){
             // TODO
             e.printStackTrace();
@@ -219,5 +223,19 @@ public class TrackingActivity extends Activity implements View.OnClickListener{
             Log.e(TAG, "Undefined behaviour: Unknown source of onClick: " + view.toString());
             assert(false);
         }
+    }
+
+    /**
+     * Returns the path to the directory where all GPX files are stored.
+     *
+     * This method tries to make the directory, the path should be existing.
+     * @return the path to the directory where the GPX files are stored
+     */
+    public static File getStorageDirectory(){
+        File path = Environment.getExternalStorageDirectory();
+        path = new File(path, "Freerun/");
+        path.mkdir();
+        Log.d(TAG, path.getAbsolutePath());
+        return path;
     }
 }

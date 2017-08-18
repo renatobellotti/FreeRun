@@ -28,6 +28,7 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.github.navasmdc:MaterialDesign:1.5@aar'
     compile 'phelat.textview:textviewplus:1.4.0'
+    compile 'com.github.angads25:filepicker:1.1.1'
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:2.8.47'
     androidTestCompile 'org.mockito:mockito-android:+'
