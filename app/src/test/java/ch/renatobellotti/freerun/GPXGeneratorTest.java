@@ -43,23 +43,12 @@ public class GPXGeneratorTest{
         when(loc.getLongitude()).thenReturn(8.546048);
         when(loc.getAltitude()).thenReturn((double) 0);
         when(loc.getTime()).thenReturn((long) 0);
-        //when(loc.getSpeed()).thenReturn((float) 0);
         when(loc.getExtras()).thenReturn(null);
     }
 
     // the current minimum API level does not support System.lineSeparator()!
     // all the "\n" characters should be replaced by the API method if the minimum API level is
     // increased one day
-    /*private GPXGenerator getGenerator(final String filename){
-        try{
-            return new GPXGenerator(context, filename);
-        } catch (FileNotFoundException e) {
-            fail("FileNotFoundException when constructing a GPXGenerator:\n" + e.getMessage());
-        }
-
-        // should never happen
-        return null;
-    }*/
 
     @Test
     public void testHeader(){

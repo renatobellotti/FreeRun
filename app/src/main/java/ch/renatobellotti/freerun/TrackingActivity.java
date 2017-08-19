@@ -31,8 +31,6 @@ public class TrackingActivity extends Activity implements View.OnClickListener{
 
     private static String TAG = "TrackingActivity";
 
-    private static String PROVIDER = LocationManager.GPS_PROVIDER;
-
     private LocationManager manager;
     private GPXGenerator gpx;
     private boolean trackingActive;
@@ -66,7 +64,6 @@ public class TrackingActivity extends Activity implements View.OnClickListener{
 
         @Override
         public void handleMessage(Message msg){
-            // TODO: update the interface
             TrackingActivity activity = weakReference.get();
             Locale locale = Locale.getDefault();
             // update time
@@ -105,7 +102,6 @@ public class TrackingActivity extends Activity implements View.OnClickListener{
             lastLoc = location;
 
 
-            // only if this is the first run
             if(firstLocation) {
                 // now that we have our first data point, we can update the GUI without throwing a NullPointerException
                 firstLocation = false;
@@ -215,6 +211,7 @@ public class TrackingActivity extends Activity implements View.OnClickListener{
             return;
         }
         trackingActive = true;
+        final String PROVIDER = LocationManager.GPS_PROVIDER;
         if(!manager.isProviderEnabled(PROVIDER)){
             // TODO: start dialog to enable GPS
         }

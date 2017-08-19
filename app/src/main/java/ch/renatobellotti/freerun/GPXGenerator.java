@@ -51,7 +51,6 @@ class GPXGenerator {
         // attributes
         final String ALTITUDE_FORMAT = "\t\t\t<ele>%1$s</ele>\n";
         final String TIME_FORMAT = "\t\t\t<time>%1$s</time>\n";
-        //final String SPEED_FORMAT = "\t\t\t<speed>%1$s</speed>\n";
         final String NUMBER_OF_SAT_FORMAT = "\t\t\t<sat>%1$s</sat>\n";
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
@@ -60,8 +59,6 @@ class GPXGenerator {
         StringBuilder attributes = new StringBuilder();
         attributes.append(String.format(ALTITUDE_FORMAT, location.getAltitude()));
         attributes.append(String.format(TIME_FORMAT, time));
-        // TODO: fix speed; problem: GPX version 1.0 had the speed tag, 1.1 does not
-        //attributes.append(String.format(SPEED_FORMAT, location.getSpeed()));
 
         Bundle extras = location.getExtras();
         if((extras != null) && (extras.getString("satellites") != null)){
