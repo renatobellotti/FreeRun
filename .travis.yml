@@ -4,7 +4,6 @@ android:
     - tools
     - platform-tools
     - build-tools
-    - android-17
 
 before_install:
 - chmod +x gradlew
