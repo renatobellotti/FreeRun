@@ -3,6 +3,8 @@ package ch.renatobellotti.freerun;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -214,6 +216,18 @@ public class TrackingActivity extends Activity implements View.OnClickListener{
         final String PROVIDER = LocationManager.GPS_PROVIDER;
         if(!manager.isProviderEnabled(PROVIDER)){
             // TODO: start dialog to enable GPS
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.gps_disabled);
+            builder.setMessage(R.string.ask_to_enable_gps);
+            builder.setCancelable(true);
+            builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
         }
         manager.requestLocationUpdates(PROVIDER, 0, 0, listener);
         Button button = findViewById(R.id.toggleTracking);

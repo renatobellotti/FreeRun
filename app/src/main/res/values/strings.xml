@@ -20,4 +20,6 @@
     <string name="err_writing_not_possible_title">Writing data not possible</string>
     <string name="err_writing_not_possible_msg">It is not possible to write the collected data. Oh no!</string>
     <string name="ok">Ok</string>
+    <string name="gps_disabled">GPS disabled</string>
+    <string name="ask_to_enable_gps">Do you want to enable GPS?</string>
 </resources>

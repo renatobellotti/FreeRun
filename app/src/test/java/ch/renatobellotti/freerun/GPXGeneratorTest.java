@@ -2,6 +2,7 @@ package ch.renatobellotti.freerun;
 
 import android.content.Context;
 import android.location.Location;
+import android.support.annotation.NonNull;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -10,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -26,7 +28,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class GPXGeneratorTest{
 
-    private static final String TEST_PATH = "/tmp/";
+    private static final String TEST_PATH = getTestDirPath();
     private static final String HEADER_ONLY_FILENAME = "header_only.gpx";
     private static final String HEADER_ONLY_PATH = TEST_PATH + HEADER_ONLY_FILENAME;
     private static final String FULL_CONTENT_FILENAME = "full_content.gpx";
@@ -127,5 +129,11 @@ public class GPXGeneratorTest{
         } catch (InterruptedException e) {
             fail("InterruptedException while waiting for xmllint to finish:\n" + e.getMessage());
         }
+    }
+
+    @NonNull
+    private static String getTestDirPath(){
+        File tmpDir = new File(System.getProperty("java.io.tmpdir"));
+        return tmpDir.getAbsolutePath() + "/";
     }
 }
