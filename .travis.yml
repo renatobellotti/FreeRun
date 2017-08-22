@@ -15,6 +15,7 @@ android:
 before_install:
 - echo "y" | sdkmanager "extras;m2repository;com;android;support;constraint;constraint-layout-solver;1.0.2"
 - chmod +x gradlew
+- apt-get -y install libxml2-utils
 
 script:
 - ./gradlew --stacktrace build connectedCheck
