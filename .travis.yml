@@ -15,3 +15,6 @@ android:
 before_install:
 - echo "y" | sdkmanager "extras;m2repository;com;android;support;constraint;constraint-layout-solver;1.0.2"
 - chmod +x gradlew
+
+script:
+- ./gradlew --info build connectedCheck
