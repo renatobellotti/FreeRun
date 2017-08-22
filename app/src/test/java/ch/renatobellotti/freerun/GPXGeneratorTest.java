@@ -125,20 +125,15 @@ public class GPXGeneratorTest{
                 fail(String.format(errorMessage, pathToGPX));
             }
         } catch (IOException e) {
-            String errorMsg = "IOException while trying to run xmllint:\n" + e.getMessage();
-            System.out.println(errorMsg);
-            fail(errorMsg);
+            fail("IOException while trying to run xmllint:\n" + e.getMessage());
         } catch (InterruptedException e) {
-            String errorMsg = "InterruptedException while waiting for xmllint to finish:\n" + e.getMessage();
-            System.out.println(errorMsg);
-            fail(errorMsg);
+            fail("InterruptedException while waiting for xmllint to finish:\n" + e.getMessage());
         }
     }
 
     @NonNull
     private static String getTestDirPath(){
         File tmpDir = new File(System.getProperty("java.io.tmpdir"));
-        System.out.println("Saving to directory: " + tmpDir.getAbsolutePath() + "/");
         return tmpDir.getAbsolutePath() + "/";
     }
 }
