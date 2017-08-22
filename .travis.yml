@@ -17,4 +17,4 @@ before_install:
 - chmod +x gradlew
 
 script:
-- ./gradlew --debug build connectedCheck
+- ./gradlew --stacktrace build connectedCheck
