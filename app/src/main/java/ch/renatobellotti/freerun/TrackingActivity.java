@@ -74,10 +74,10 @@ public class TrackingActivity extends Activity implements View.OnClickListener{
             ++activity.time;
             //update current speed
             PlusTextView currentSpeedData = activity.findViewById(R.id.currentSpeedData);
-            currentSpeedData.setText(String.format(locale, "%1$1.2f m/s", activity.lastLoc.getSpeed()));
+            currentSpeedData.setText(String.format(locale, "%1$1.2f km/h", activity.lastLoc.getSpeed()*3.6));
             //update average speed
             PlusTextView averageSpeedData = activity.findViewById(R.id.averageSpeedData);
-            averageSpeedData.setText(String.format(locale, "%1$1.2f m/s", activity.speedSum/activity.numberOfPoints));
+            averageSpeedData.setText(String.format(locale, "%1$1.2f km/h", activity.speedSum*3.6/activity.numberOfPoints));
             // update distance
             PlusTextView distanceData = activity.findViewById(R.id.distanceData);
             distanceData.setText(String.format(locale, "%1$1.2f km", activity.distance/1000));
