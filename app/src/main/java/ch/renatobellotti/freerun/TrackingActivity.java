@@ -132,6 +132,9 @@ public class TrackingActivity extends Activity implements View.OnClickListener{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACCESS_FINE_LOCATION};
+        this.requestPermissions(permissions, 0);
+
         updateInterfaceHandler = new ExtendedHandler();
         ExtendedHandler.weakReference = new WeakReference<>(this);
 
@@ -171,7 +174,7 @@ public class TrackingActivity extends Activity implements View.OnClickListener{
             } catch (IOException e) {
                 // TODO
                 e.printStackTrace();
-                Log.e(TAG, "IOException!");
+                Log.e(TAG, "IOException!" + "\n" + e.getMessage());
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle(getString(R.string.err_writing_not_possible_title));
                 builder.setMessage(getString(R.string.err_writing_not_possible_msg));
