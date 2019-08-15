@@ -160,8 +160,10 @@ public class TrackingActivity extends Activity implements View.OnClickListener{
         // This is independent of the user's locale settings and can easily be converted to be
         // displayed in the user's current locale even when he/she changes it.
         long timeStamp = System.currentTimeMillis() / 1000L;
-        String filename = timeStamp + ".gpx";
-        FileOutputStream file;
+        String gpxFilename = timeStamp + ".gpx";
+        String csvFilename = timeStamp +".csv";
+        FileOutputStream gpxFile;
+        FileOutputStream csvFile;
         File directory = getStorageDirectory();
         if(directory == null){
             // no storage available
@@ -169,8 +171,9 @@ public class TrackingActivity extends Activity implements View.OnClickListener{
             finish();
         }else {
             try {
-                file = new FileOutputStream(new File(directory, filename));
-                gpx = new GPXGenerator(file);
+                gpxFile = new FileOutputStream(new File(directory, gpxFilename));
+                csvFile = new FileOutputStream(new File(directory, csvFilename));
+                gpx = new GPXGenerator(gpxFile, csvFile);
             } catch (IOException e) {
                 // TODO
                 e.printStackTrace();

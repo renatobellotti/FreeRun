@@ -10,35 +10,41 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 
-/** Generate a GPX file out of Location objects.
+/** Generate a GPX gpxFile out of Location objects.
  *
  *  More information about GPX can be found at: http://www.topografix.com/gpx_manual.asp
  */
 class GPXGenerator {
 
-    private PrintWriter file;
+    private PrintWriter gpxFile;
+    private PrintWriter csvFile;
 
-    GPXGenerator(OutputStream fileOutput) {
-        file = new PrintWriter(fileOutput);
+    GPXGenerator(OutputStream gpxFileOutput, OutputStream csvFileOutput) {
+        // write header to GPX file
+        gpxFile = new PrintWriter(gpxFileOutput);
         writeHeader();
+
+        // write header to CSV file
+        csvFile = new PrintWriter(csvFileOutput);
+        csvFile.write("Time, Latitude, Longitude, Altitude, Number of Satellites\n");
     }
 
     private void writeHeader() {
         // parts of the header were copied from https://de.wikipedia.org/wiki/GPS_Exchange_Format
-        file.write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\" ?>");
-        file.write("\n");
-        file.write(String.format(
+        gpxFile.write("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\" ?>");
+        gpxFile.write("\n");
+        gpxFile.write(String.format(
                 "<gpx xmlns=\"http://www.topografix.com/GPX/1/1\" version=\"1.1\" creator=\"Freerun Android App v%1$s\">",
                 BuildConfig.VERSION_CODE
         ));
-        file.write("\n");
-        file.write("\t<trk>\n");
-        file.write("\t\t<trkseg>\n");
+        gpxFile.write("\n");
+        gpxFile.write("\t<trk>\n");
+        gpxFile.write("\t\t<trkseg>\n");
     }
 
     // TODO: change this so that the indvidual values are passed instead on a Location object
     // that way this class could also be used without the Android platform
-    /** Add another track point to the GPX file.
+    /** Add another track point to the GPX gpxFile.
      *
      * For more information and examples about the GPX format, see https://de.wikipedia.org/wiki/GPS_Exchange_Format.
      *
@@ -70,14 +76,27 @@ class GPXGenerator {
         // TODO: include speed uncertainty as an attribute [NOT IN THE STANDARD!]
 
         String trackpoint = String.format(TRACKPOINT_FORMAT, location.getLatitude(), location.getLongitude(), attributes);
-        file.write(trackpoint);
+        gpxFile.write(trackpoint);
+
+        String[] infos = {
+                time,
+                String.valueOf(location.getLatitude()),
+                String.valueOf(location.getLongitude()),
+                String.valueOf(location.getAltitude())
+        };
+
+        String row = String.join(", ", infos);
+        csvFile.write(row + "\n");
     }
 
     void close() throws IOException {
-        file.write("\t\t</trkseg>\n");
-        file.write("\t</trk>\n");
-        file.write("</gpx>");
-        file.flush();
-        file.close();
+        gpxFile.write("\t\t</trkseg>\n");
+        gpxFile.write("\t</trk>\n");
+        gpxFile.write("</gpx>");
+        gpxFile.flush();
+        gpxFile.close();
+
+        csvFile.flush();
+        csvFile.close();
     }
 }
